@@ -1,0 +1,12 @@
+# Python 自动忽略
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+.idea/
+.vscode/
+.DS_Store

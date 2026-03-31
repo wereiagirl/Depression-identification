@@ -1,0 +1,4 @@
+import os
+
+RANDOM_SEED = 42
+TEST_SIZE = 0.2
