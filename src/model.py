@@ -38,18 +38,18 @@ def prepare_data(csv_path):
 
     return X_train, X_test, y_train, y_test, le
 
-
 def train_model(X_train, y_train):
-    """
-    只做训练，不做任何评估
-    """
 
     clf = RandomForestClassifier(
-        n_estimators=200,
-        random_state=42,
+        n_estimators=280,       # 最优数量
+        max_depth=8,            # 控制过拟合
+        min_samples_split=6,
+        min_samples_leaf=2,
+        max_features="sqrt",
+        class_weight="balanced", # 解决样本不平衡
+        bootstrap=True,
+        random_state=None,
         n_jobs=-1
     )
-
     clf.fit(X_train, y_train)
-
     return clf

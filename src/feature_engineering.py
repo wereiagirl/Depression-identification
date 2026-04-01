@@ -13,7 +13,7 @@ def extract_features(segments, subject_id):
 
     for label, data in segments.items():
         raw_sig = data["raw"]
-        sig = data["processed"]
+        sig = data["normalized"]
         time_arr = data["time"]
 
         if len(sig) < 10:

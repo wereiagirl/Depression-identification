@@ -19,3 +19,6 @@ if __name__ == "__main__":
 
     # 3. 评估
     evaluate_model(clf, X_test, y_test, le)
+
+    model = train_model(X_train, y_train)
+    print(model.feature_importances_)
