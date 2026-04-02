@@ -3,15 +3,6 @@ import pandas as pd
 
 
 def reshape_features(input_file, output_dir="./outputs"):
-    """
-    将特征表：
-    1. 按 Stage 拆分
-    2. 转换为宽表（每个被试一行）
-
-    Args:
-        input_file (str): 特征总表路径
-        output_dir (str): 输出目录
-    """
 
     if not os.path.exists(input_file):
         print(f"[ERROR] File not found: {input_file}")
@@ -22,9 +13,6 @@ def reshape_features(input_file, output_dir="./outputs"):
     df = pd.read_csv(input_file)
     print(f"[INFO] Loaded feature table: {len(df)} rows")
 
-    # ==========================================
-    # 形式一：按任务拆分
-    # ==========================================
     print("\n--- Generating Stage-wise tables ---")
 
     stages = df['Stage'].unique()
@@ -40,14 +28,11 @@ def reshape_features(input_file, output_dir="./outputs"):
 
         print(f"[OK] {out_path} ({len(stage_df)} rows)")
 
-    # ==========================================
-    # 形式二：宽表
-    # ==========================================
     print("\n--- Generating Wide Format Table ---")
 
     df_wide = df.pivot(index='Subject_ID', columns='Stage')
 
-    # 展平多层列名
+
     df_wide.columns = [
         f"{stage}_{feature}"
         for feature, stage in df_wide.columns
