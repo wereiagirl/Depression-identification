@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def evaluate_model(clf, X_test, y_test):
+def evaluate(clf, X_test, y_test):
     y_pred = clf.predict(X_test)
     y_pred_proba = clf.predict_proba(X_test)[:, 1]
 
@@ -23,8 +23,7 @@ def evaluate_model(clf, X_test, y_test):
     print(f"\n[Accuracy] {acc:.2%}")
     print(f"[AUC] {auc:.4f}")
 
-    # ----------------------- 修复在这里 -----------------------
-    target_names = ["Not Depression", "Depression"]
+    target_names = ["negetive", "positive"]
 
     print("\n[Classification Report]")
     print(classification_report(

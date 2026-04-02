@@ -7,7 +7,6 @@ STATE_LABELS = ['Rest', 'Positive', 'Neutral', 'Negative']
 
 def segment_and_preprocess_sp(lines, df):
 
-    # ========= 1. Extract timestamps =========
     if len(lines) < 2:
         raise ValueError("Invalid file format: missing timestamp line")
 
@@ -16,7 +15,6 @@ def segment_and_preprocess_sp(lines, df):
     if not start_times:
         raise ValueError("No timestamps extracted")
 
-    # ========= 2. Clean dataframe =========
     df = df.copy()
 
     df['SP_Value'] = pd.to_numeric(df['SP_Value'], errors='coerce')
@@ -25,7 +23,6 @@ def segment_and_preprocess_sp(lines, df):
     if len(df) == 0:
         raise ValueError("No valid data available")
 
-    # ========= 3. Time alignment =========
     df['Date'] = df['Date'].astype(int).astype(str)
     df['Datetime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'])
 
@@ -35,7 +32,6 @@ def segment_and_preprocess_sp(lines, df):
     segments = {}
     num_stages = min(len(STATE_LABELS), len(event_times))
 
-    # ========= 4. Signal segmentation =========
     for i in range(num_stages):
         label = STATE_LABELS[i]
         start_t = event_times[i]
@@ -51,7 +47,6 @@ def segment_and_preprocess_sp(lines, df):
         if len(sig) == 0:
             continue
 
-        # ========= 5. Outlier removal (IQR) =========
         Q1, Q3 = np.nanpercentile(sig, [25, 75])
         IQR = Q3 - Q1
 
@@ -61,7 +56,6 @@ def segment_and_preprocess_sp(lines, df):
             sig
         )
 
-        # ========= 6. Interpolation =========
         nans = np.isnan(sig_clean)
 
         if np.any(nans) and not np.all(nans):
@@ -70,7 +64,6 @@ def segment_and_preprocess_sp(lines, df):
         elif np.all(nans):
             sig_clean = np.zeros_like(sig_clean)
 
-        # ========= 7. Wavelet denoising =========
         sig_denoised = sig_clean.copy()
 
         coeffs = pywt.wavedec(sig_denoised, 'db4', level=4)
@@ -83,7 +76,6 @@ def segment_and_preprocess_sp(lines, df):
             ]
             sig_denoised = pywt.waverec(coeffs, 'db4')[:len(sig_denoised)]
 
-        # ========= 8. Normalization =========
         min_v, max_v = np.min(sig_denoised), np.max(sig_denoised)
 
         if max_v > min_v:
@@ -91,7 +83,6 @@ def segment_and_preprocess_sp(lines, df):
         else:
             sig_norm = np.zeros_like(sig_denoised)
 
-        # ========= Store =========
         segments[label] = {
             "time": seg_df['Datetime'].values,
             "raw": sig_clean,

@@ -4,7 +4,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 
 
-def prepare_data(csv_path):
+def dataset(csv_path):
     """
     数据读取 + 二分类筛选 + 按被试划分
     """
