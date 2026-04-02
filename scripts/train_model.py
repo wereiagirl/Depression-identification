@@ -3,7 +3,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from model import prepare_data, train_model
+from test_model import prepare_data, train_model
 from evaluate import evaluate_model
 
 
