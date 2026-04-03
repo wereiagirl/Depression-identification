@@ -4,8 +4,8 @@ def train_model(X_train, y_train):
 
     clf = SVC(
         kernel="rbf",
-        C=1.0,
-        gamma=0.005,
+        C=1.4 ,
+        gamma=0.0085,
         random_state=42,
         probability=True,
         class_weight='balanced'

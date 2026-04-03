@@ -30,7 +30,7 @@ def merge_data():
     df_final = df_final.drop(columns=["皮肤电势编号"])
 
     # Create binary label (>=10 → depression=1)
-    df_final["label"] = (df_final["抑郁量表总分"] >= 9).astype(int)
+    df_final["label"] = (df_final["抑郁量表总分"] >= 4).astype(int)
 
     # Show label distribution
     print("Label distribution:")

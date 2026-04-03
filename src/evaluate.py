@@ -2,7 +2,8 @@ from sklearn.metrics import (
     classification_report,
     accuracy_score,
     confusion_matrix,
-    roc_auc_score
+    roc_auc_score,
+    roc_curve
 )
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -23,17 +24,19 @@ def evaluate(clf, X_test, y_test):
     print(f"\n[Accuracy] {acc:.2%}")
     print(f"[AUC] {auc:.4f}")
 
-    target_names = ["negetive", "positive"]
+    target_names = ["negative", "positive"]
 
     print("\n[Classification Report]")
     print(classification_report(
         y_test,
         y_pred,
-        target_names=target_names
+        target_names=target_names,
+        zero_division=0
     ))
 
     print("\n[Confusion Matrix]")
     print(cm)
+
 
     plt.figure(figsize=(6,5))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
@@ -43,6 +46,20 @@ def evaluate(clf, X_test, y_test):
     plt.ylabel("True Label")
     plt.title(f"Confusion Matrix | AUC={auc:.4f}")
     plt.tight_layout()
+
+
+    fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
+    plt.figure(figsize=(6, 5))
+    plt.plot(fpr, tpr, label=f'AUC = {auc:.4f}', color='darkorange', lw=2)
+    plt.plot([0, 1], [0, 1], color='navy', lw=1, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate (1 - Specificity)')
+    plt.ylabel('True Positive Rate (Sensitivity)')
+    plt.title('ROC Curve')
+    plt.legend(loc="lower right")
+    plt.tight_layout()
+    
     plt.show()
 
     return acc, auc, cm
